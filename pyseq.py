@@ -11,6 +11,7 @@ import numpy as np
 import random
 import copy
 import argparse
+import os
 
 
 BASES = {ord(ch) for ch in ["A", "T", "G", "C"]}
@@ -101,12 +102,12 @@ def generate_random_dna_string(length):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--n', dest='ngen', type=int, help='n generations')
-    parser.add_argument('--o', dest='out', type=str, help='an output file')
+    parser.add_argument('-n', dest='ngen', type=int, help='n generations')
+    parser.add_argument('-o', dest='out', type=str, help='an output file')
     args = parser.parse_args()
     starting_seq = generate_random_dna_string(200)
     generations = args.ngen
-    output_file = args.out
+    output_file = os.path.abspath(args.out)
     poisson_lambda = 3
     seqs = simulate(starting_seq, generations, poisson_lambda, basic_evolver)
     with open(output_file) as op:
