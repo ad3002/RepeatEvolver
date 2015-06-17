@@ -70,7 +70,7 @@ class Entity(object):
         return np.random.poisson(self._poisson_lambda)
 
 
-def basic_evolver(seq, mutation_rate=0.05):
+def basic_evolver(seq, mutation_rate=0.2):
     """
     Picks probability of base substitution from binomial distribution with given
     mutation rate.
@@ -109,7 +109,7 @@ def main():
     starting_seq = generate_random_dna_string(200)
     generations = args.ngen
     output_file = os.path.abspath(args.out)
-    poisson_lambda = 3
+    poisson_lambda = 1
     seqs = simulate(starting_seq, generations, poisson_lambda, basic_evolver)
     with open(output_file, "w") as op:
         for seq in seqs:
