@@ -49,6 +49,10 @@ class Entity(object):
         return self._seq
 
     @property
+    def replications_left(self):
+        return self._replications_left
+
+    @property
     def generation(self):
         return self._generation
 
@@ -89,7 +93,7 @@ def simulate(starting_seq, generations, poisson_lambda, evolver):
     pool = deque()
     pool.append(Entity(starting_seq, poisson_lambda, evolver))
     dead = []
-    while pool[0].generation <= generations:
+    while pool and pool[0].generation <= generations:
         try:
             pool.append(pool[0].replicate())
         except ReplicationError:
@@ -106,10 +110,10 @@ def main():
     parser.add_argument('-n', dest='ngen', type=int, help='n generations')
     parser.add_argument('-o', dest='out', type=str, help='an output file')
     args = parser.parse_args()
-    starting_seq = generate_random_dna_string(200)
+    starting_seq = generate_random_dna_string(100)
     generations = args.ngen
     output_file = os.path.abspath(args.out)
-    poisson_lambda = 1.5
+    poisson_lambda = 1.1
     seqs = simulate(starting_seq, generations, poisson_lambda, basic_evolver)
     with open(output_file, "w") as op:
         for seq in seqs:
