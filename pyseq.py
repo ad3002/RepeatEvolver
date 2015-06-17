@@ -109,7 +109,7 @@ def main():
     starting_seq = generate_random_dna_string(200)
     generations = args.ngen
     output_file = os.path.abspath(args.out)
-    poisson_lambda = 1
+    poisson_lambda = 1.5
     seqs = simulate(starting_seq, generations, poisson_lambda, basic_evolver)
     with open(output_file, "w") as op:
         for seq in seqs:
