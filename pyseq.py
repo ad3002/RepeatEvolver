@@ -86,7 +86,8 @@ def basic_evolver(seq, mutation_rate=0.05):
 
 
 def simulate(starting_seq, generations, poisson_lambda, evolver):
-    pool = deque(Entity(starting_seq, poisson_lambda, evolver))
+    pool = deque()
+    pool.append(Entity(starting_seq, poisson_lambda, evolver))
     dead = []
     while pool[0].generation <= generations:
         try:
