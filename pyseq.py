@@ -14,7 +14,7 @@ import argparse
 import os
 
 
-BASES = {ord(ch) for ch in ["A", "T", "G", "C"]}
+BASES = map(ord, ["A", "T", "G", "C"])
 
 
 class ReplicationError(BaseException):
@@ -81,7 +81,7 @@ def basic_evolver(seq, mutation_rate=0.05):
     seq = copy.copy(seq)
     for i in xrange(len(seq)):
         if np.random.binomial(1, mutation_rate):
-            seq[i] = random.choice(BASES - seq[i])
+            seq[i] = random.choice([base for base in BASES if base != seq[i]])
     return seq
 
 
@@ -110,6 +110,10 @@ def main():
     output_file = os.path.abspath(args.out)
     poisson_lambda = 3
     seqs = simulate(starting_seq, generations, poisson_lambda, basic_evolver)
-    with open(output_file) as op:
+    with open(output_file, "w") as op:
         for seq in seqs:
             print(seq.sequence, seq.generation, sep="\t", file=op)
+
+
+if __name__ == "__main__":
+    main()
