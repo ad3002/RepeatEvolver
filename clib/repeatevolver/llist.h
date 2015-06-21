@@ -65,7 +65,7 @@ QueueNode* init_node() {
 
 inline void dealloc_node(QueueNode* node) {
     /*
-     Frees memory alocated by a node.
+     Frees memory allocated by a node.
      */
     assert(node && "Got NULL instead of node pointer");
     free(node);
@@ -126,6 +126,9 @@ void* pop_data(LinkedQueue* queue) {
 
 
 inline void dealloc_queue(LinkedQueue *queue) {
+    /* 
+     Frees memory allocated by a queue
+     */
     assert(queue && "Got NULL instead of queue pointer");
     free(queue);
     queue = NULL;
