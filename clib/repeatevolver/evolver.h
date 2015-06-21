@@ -15,6 +15,14 @@
 #include "gsl/gsl_rng.h"
 
 
+const char substitution_matrix[4][4] = {
+    "TGC",
+    "AGC",
+    "ATC",
+    "ATG"
+};
+
+
 ///////////////////////////
 //////// Typedefs  ////////
 ///////////////////////////
@@ -24,6 +32,17 @@ typedef struct Individual {
     short rep_left;  //replications left
     char *sequence; // dna
 } Individual;
+
+
+enum substitution_keys {
+    /*
+     This enum contains "keys" to the substitution_matrix char array
+     */
+    A = 1,
+    T = 2,
+    G = 3,
+    C = 4
+};
 
 
 ///////////////////////////
@@ -122,6 +141,34 @@ Individual* replicate_individual(Individual* individual) {
     short n_children = individuals_rep_left(individual);
     
     return 0;
+}
+
+
+char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
+    char* successor = str_alloc(ancestor_length);
+    for (int i = 0; i < ancestor_length; i++) {
+        if (substitute(mutation_rate)) {
+            assert(0 && "Not implemented yet");
+            switch (successor[i]) {
+                case 'A':
+                    A;
+                    break;
+                case 'T':
+                    T;
+                    break;
+                case 'G':
+                    G;
+                    break;
+                case 'C':
+                    C;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    return successor;
 }
 
 
