@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-//#include "gsl/gsl_rng.h"
+#include "gsl/gsl_rng.h"
 
 
 ///////////////////////////
@@ -31,16 +31,43 @@ typedef struct Individual {
 ///////////////////////////
 
 
-short substitute(float mutation_rate) {
+extern unsigned int gsl_ran_bernoulli(const gsl_rng* r, double p);
+
+extern unsigned int gsl_ran_poisson(const gsl_rng* r, double mu);
+
+
+unsigned int substitute(double mutation_rate) {
     /* 
-     Draws boolean numbers from a binomial distribution with chance of
+     Draws a boolean number from a binomial distribution with chance of
      success specified by the mutation_rate argument. 
      */
-    return 0;
+    const gsl_rng_type* T = gsl_rng_taus2;
+    static gsl_rng* r = NULL;
+    if (r) {
+        return gsl_ran_bernoulli(r, mutation_rate);
+    }
+    r = gsl_rng_alloc(T);
+    gsl_rng_set(r, 123);
+    return gsl_ran_bernoulli(r, mutation_rate);
 }
 
 
-inline char* individuals_sequence(Individual* individual) {
+unsigned int get_n_of_replicates(double lambda) {
+    /*
+     Draws a discrete number from a Poisson distribution.
+     */
+    const gsl_rng_type* T = gsl_rng_taus2;
+    static gsl_rng* r = NULL;
+    if (r) {
+        return gsl_ran_poisson(r, lambda);
+    }
+    r = gsl_rng_alloc(T);
+    gsl_rng_set(r, 123);
+    return gsl_ran_poisson(r, lambda);
+}
+
+
+static inline char* individuals_sequence(Individual* individual) {
     /*
      Extracts a nucleotide sequence from an individual
      */
@@ -48,7 +75,7 @@ inline char* individuals_sequence(Individual* individual) {
 }
 
 
-inline short individuals_rep_left(Individual* individual) {
+static inline short individuals_rep_left(Individual* individual) {
     /*
      Extracts the number of replications an individual can undergo
      */
@@ -74,16 +101,16 @@ char** reproduce_ancestor(char* sequence, int seq_len, short n_children) {
     return children;
 }
 
-/*
+
 Individual* replicate_individual(Individual* individual) {
- 
+    /*
      Returns an individual that evolved from the given individual
- 
+     */
     char* sequence = individuals_sequence(individual);
     short n_children = individuals_rep_left(individual);
     
     return 0;
-} */
+}
 
 
 #endif
