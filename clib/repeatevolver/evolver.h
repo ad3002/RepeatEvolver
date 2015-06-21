@@ -4,12 +4,15 @@
 //  Created by Ilya Korvigo on 20.06.15.
 //
 
+
 #ifndef evolver_h
 #define evolver_h
 
 
 #include <string.h>
-#include "gsl/gsl_rng.h"
+#include <stdlib.h>
+#include <assert.h>
+//#include "gsl/gsl_rng.h"
 
 
 ///////////////////////////
@@ -18,7 +21,7 @@
 
 
 typedef struct Individual {
-    ushort rep_left;  //replications left
+    short rep_left;  //replications left
     char *sequence; // dna
 } Individual;
 
@@ -28,7 +31,7 @@ typedef struct Individual {
 ///////////////////////////
 
 
-ushort substitute(float mutation_rate) {
+short substitute(float mutation_rate) {
     /* 
      Draws boolean numbers from a binomial distribution with chance of
      success specified by the mutation_rate argument. 
@@ -45,7 +48,7 @@ inline char* individuals_sequence(Individual* individual) {
 }
 
 
-inline ushort individuals_rep_left(Individual* individual) {
+inline short individuals_rep_left(Individual* individual) {
     /*
      Extracts the number of replications an individual can undergo
      */
@@ -53,7 +56,7 @@ inline ushort individuals_rep_left(Individual* individual) {
 }
 
 
-char* str_alloc(str_length) {
+char* str_alloc(int str_length) {
     char* str = malloc((str_length + 1) * sizeof *str);
     assert(str && "Failed to allocate string");
     str[str_length] = '\0';
@@ -61,7 +64,7 @@ char* str_alloc(str_length) {
 }
 
 
-char** reproduce_ancestor(char* sequence, int seq_len, ushort n_children) {
+char** reproduce_ancestor(char* sequence, int seq_len, short n_children) {
     char** children = malloc(n_children * sizeof *children);
     assert(children && "Failed to allocate pointers to children sequences");
     for (int i = 0; i < n_children; i++) {
@@ -71,19 +74,16 @@ char** reproduce_ancestor(char* sequence, int seq_len, ushort n_children) {
     return children;
 }
 
-
+/*
 Individual* replicate_individual(Individual* individual) {
-    /*
+ 
      Returns an individual that evolved from the given individual
-     */
+ 
     char* sequence = individuals_sequence(individual);
-    ushort n_children = individuals_rep_left(individual);
+    short n_children = individuals_rep_left(individual);
     
     return 0;
-}
-                     
-
-
+} */
 
 
 #endif
