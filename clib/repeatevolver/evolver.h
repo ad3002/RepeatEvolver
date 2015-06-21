@@ -43,26 +43,28 @@ unsigned int substitute(double mutation_rate) {
      */
     const gsl_rng_type* T = gsl_rng_taus2;
     static gsl_rng* r = NULL;
-    if (r) {
+    if (!r) {
+        r = gsl_rng_alloc(T);
+        gsl_rng_set(r, 123);
         return gsl_ran_bernoulli(r, mutation_rate);
     }
-    r = gsl_rng_alloc(T);
-    gsl_rng_set(r, 123);
+
     return gsl_ran_bernoulli(r, mutation_rate);
 }
 
 
 unsigned int get_n_of_replicates(double lambda) {
     /*
-     Draws a discrete number from a Poisson distribution.
+     Draws a discrete number from a Poisson distribution with specified 
+     average expectation - lambda.
      */
     const gsl_rng_type* T = gsl_rng_taus2;
     static gsl_rng* r = NULL;
-    if (r) {
+    if (!r) {
+        r = gsl_rng_alloc(T);
+        gsl_rng_set(r, 123);
         return gsl_ran_poisson(r, lambda);
     }
-    r = gsl_rng_alloc(T);
-    gsl_rng_set(r, 123);
     return gsl_ran_poisson(r, lambda);
 }
 
@@ -84,6 +86,10 @@ static inline short individuals_rep_left(Individual* individual) {
 
 
 char* str_alloc(int str_length) {
+    /*
+     Dynamically allocates a char array of size str_length + 1 and puts
+     the string terminator in the very end.
+     */
     char* str = malloc((str_length + 1) * sizeof *str);
     assert(str && "Failed to allocate string");
     str[str_length] = '\0';
@@ -92,6 +98,11 @@ char* str_alloc(int str_length) {
 
 
 char** reproduce_ancestor(char* sequence, int seq_len, short n_children) {
+    /*
+     Allocates and writes an array of copies of provided sequence. The
+     number of copies is defined by the n_children parameter; seq_len
+     specifies sequence length.
+     */
     char** children = malloc(n_children * sizeof *children);
     assert(children && "Failed to allocate pointers to children sequences");
     for (int i = 0; i < n_children; i++) {
@@ -106,6 +117,7 @@ Individual* replicate_individual(Individual* individual) {
     /*
      Returns an individual that evolved from the given individual
      */
+    assert(0);
     char* sequence = individuals_sequence(individual);
     short n_children = individuals_rep_left(individual);
     
