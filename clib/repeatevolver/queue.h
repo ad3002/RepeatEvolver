@@ -37,7 +37,18 @@ typedef struct LinkedQueue {
 ///////////////////////////
 
 
-LinkedQueue* init_queue();
+LinkedQueue* init_queue() {
+    /*
+     Initializes an empty queue
+     */
+    LinkedQueue* queue = malloc(sizeof *queue);
+    assert(queue && "Failed to allocate memory for a queue");
+    queue->head = NULL;
+    queue->tail = NULL;
+    queue->k = 0;
+    
+    return queue;
+}
 
 
 QueueNode* init_node() {
@@ -142,6 +153,42 @@ void destroy_queue(LinkedQueue* queue) {
         dealloc_node(queue->head);
         dealloc_queue(queue);
     }
+}
+
+
+LinkedQueue* enqueue_pointers(void** array_of_pointers, int n_pointers) {
+    /*
+     Wraps an array of pointers to data into a queue
+     */
+    LinkedQueue* queue = init_queue();
+    for (int i = 0; i < n_pointers; i++) {
+        push_data(array_of_pointers[i], queue);
+    }
+    return queue;
+}
+
+
+void merge_queues(LinkedQueue* head_queue, LinkedQueue* tail_queue) {
+    /*
+     Merges 2 LinkedQueues. Links tail-node of the head_queue to the head-node
+     of the tail_queue. Replaces tail of the head_queue with that of the 
+     tail_queue
+     */
+    assert(head_queue && tail_queue && "Passed a NULL queue pointer");
+    head_queue->tail->next = tail_queue->head;
+    head_queue->tail = tail_queue->tail;
+}
+
+
+void merge_queues_memfree(LinkedQueue* head_queue, LinkedQueue* tail_queue) {
+    /*
+     A wrapper-function of the merge_queues function. Merges 2 LinkedQueues.
+     Links tail-node of the head_queue to the head-node of the tail_queue.
+     Replaces tail of the head_queue with that of the tail_queue. Frees the space
+     allocated by the tail_queue.
+     */
+    merge_queues(head_queue, tail_queue);
+    dealloc_queue(tail_queue);
 }
 
 

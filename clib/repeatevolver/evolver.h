@@ -38,10 +38,10 @@ enum substitution_keys {
     /*
      This enum contains "keys" to the substitution_matrix char array
      */
-    A = 1,
-    T = 2,
-    G = 3,
-    C = 4
+    A = 0,
+    T = 1,
+    G = 2,
+    C = 3
 };
 
 
@@ -53,6 +53,16 @@ enum substitution_keys {
 extern unsigned int gsl_ran_bernoulli(const gsl_rng* r, double p);
 
 extern unsigned int gsl_ran_poisson(const gsl_rng* r, double mu);
+
+
+static inline void dealloc_individual(Individual* individual) {
+    /*
+     Frees memory allocated by an individual
+     */
+    assert(individual && "Got NULL instead of an individual pointer");
+    free(individual);
+    individual = NULL;
+}
 
 
 unsigned int substitute(double mutation_rate) {
@@ -67,7 +77,6 @@ unsigned int substitute(double mutation_rate) {
         gsl_rng_set(r, 123);
         return gsl_ran_bernoulli(r, mutation_rate);
     }
-
     return gsl_ran_bernoulli(r, mutation_rate);
 }
 
@@ -116,59 +125,65 @@ char* str_alloc(int str_length) {
 }
 
 
-char** reproduce_ancestor(char* sequence, int seq_len, short n_children) {
+char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
+    char* successor = str_alloc(ancestor_length);
+    for (int i = 0; i < ancestor_length; i++) {
+        if (substitute(mutation_rate)) {
+            switch (ancestor[i]) {
+                case 'A':
+                    successor[i] = substitution_matrix[A][arc4random_uniform(3)];
+                    break;
+                case 'T':
+                    successor[i] = substitution_matrix[T][arc4random_uniform(3)];
+                    break;
+                case 'G':
+                    successor[i] = substitution_matrix[G][arc4random_uniform(3)];
+                    break;
+                case 'C':
+                    successor[i] = substitution_matrix[C][arc4random_uniform(3)];
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            successor[i] = ancestor[i];
+        }
+    }
+    return successor;
+}
+
+
+char** reproduce_ancestor(char* seq, int seq_len, short n_child, double mut_r) {
     /*
-     Allocates and writes an array of copies of provided sequence. The
-     number of copies is defined by the n_children parameter; seq_len
-     specifies sequence length.
+     Allocates and writes an array of mutated copies of provided sequence (seq).
+     The number of copies is defined by the n_children parameter; seq_len
+     specifies sequence length. Mutation rate is defined by mut_r
      */
-    char** children = malloc(n_children * sizeof *children);
+    char** children = malloc(n_child * sizeof *children);
     assert(children && "Failed to allocate pointers to children sequences");
-    for (int i = 0; i < n_children; i++) {
-        children[i] = str_alloc(seq_len);
-        strcpy(children[i], sequence);
+    for (int i = 0; i < n_child; i++) {
+        children[i] = evolve_str(seq, seq_len, mut_r);
     }
     return children;
 }
 
 
-Individual* replicate_individual(Individual* individual) {
+
+
+void unload_sequence(char* sequence, int sequence_length);
+
+
+LinkedQueue* process_individual(Individual* individual, int seq_len, double mut_r) {
     /*
-     Returns an individual that evolved from the given individual
+     Returns a queue of descendant; calls unload_sequence to store the
+     origninal sequence of passed individual. Frees memory allocated by the 
+     passed individual.
      */
-    assert(0);
-    char* sequence = individuals_sequence(individual);
+    char* seq = individuals_sequence(individual);
     short n_children = individuals_rep_left(individual);
-    
-    return 0;
-}
-
-
-char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
-    char* successor = str_alloc(ancestor_length);
-    for (int i = 0; i < ancestor_length; i++) {
-        if (substitute(mutation_rate)) {
-            assert(0 && "Not implemented yet");
-            switch (successor[i]) {
-                case 'A':
-                    A;
-                    break;
-                case 'T':
-                    T;
-                    break;
-                case 'G':
-                    G;
-                    break;
-                case 'C':
-                    C;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    
-    return successor;
+    char** children = reproduce_ancestor(seq, seq_len, n_children, mut_r);
+    LinkedQueue* child_queue = enqueue_pointers((void** )children, n_children);
+    return child_queue;
 }
 
 
