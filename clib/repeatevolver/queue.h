@@ -156,7 +156,7 @@ void destroy_queue(LinkedQueue* queue) {
 }
 
 
-LinkedQueue* enqueue_pointers(void** array_of_pointers, int n_pointers) {
+LinkedQueue* enqueue_data_pointers(void** array_of_pointers, int n_pointers) {
     /*
      Wraps an array of pointers to data into a queue
      */

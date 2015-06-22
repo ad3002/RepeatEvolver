@@ -29,8 +29,9 @@ const char substitution_matrix[4][4] = {
 
 
 typedef struct Individual {
-    short rep_left;  //replications left
-    char *sequence; // dna
+    short replications;  //replications left
+    char *sequence;
+    int generation;      // dna
 } Individual;
 
 
@@ -53,6 +54,19 @@ enum substitution_keys {
 extern unsigned int gsl_ran_bernoulli(const gsl_rng* r, double p);
 
 extern unsigned int gsl_ran_poisson(const gsl_rng* r, double mu);
+
+
+Individual* init_individual() {
+    /*
+     Initializes an empty individual
+     */
+    Individual* individual = malloc(sizeof *individual);
+    assert(individual && "Failed to allocate memory for an individual");
+    individual->replications = 0;
+    individual->generation = 0;
+    individual->sequence = NULL;
+    return individual;
+}
 
 
 static inline void dealloc_individual(Individual* individual) {
@@ -81,35 +95,19 @@ unsigned int substitute(double mutation_rate) {
 }
 
 
-unsigned int get_n_of_replicates(double lambda) {
+unsigned int get_n_of_replications(double expected) {
     /*
      Draws a discrete number from a Poisson distribution with specified 
-     average expectation - lambda.
+     average expectation - expected.
      */
     const gsl_rng_type* T = gsl_rng_taus2;
     static gsl_rng* r = NULL;
     if (!r) {
         r = gsl_rng_alloc(T);
         gsl_rng_set(r, 123);
-        return gsl_ran_poisson(r, lambda);
+        return gsl_ran_poisson(r, expected);
     }
-    return gsl_ran_poisson(r, lambda);
-}
-
-
-static inline char* individuals_sequence(Individual* individual) {
-    /*
-     Extracts a nucleotide sequence from an individual
-     */
-    return individual->sequence;
-}
-
-
-static inline short individuals_rep_left(Individual* individual) {
-    /*
-     Extracts the number of replications an individual can undergo
-     */
-    return individual->rep_left;
+    return gsl_ran_poisson(r, expected);
 }
 
 
@@ -143,7 +141,7 @@ char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
                     successor[i] = substitution_matrix[C][arc4random_uniform(3)];
                     break;
                 default:
-                    break;
+                    assert(0 && "Non-DNA symbol passed");
             }
         } else {
             successor[i] = ancestor[i];
@@ -153,36 +151,43 @@ char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
 }
 
 
-char** reproduce_ancestor(char* seq, int seq_len, short n_child, double mut_r) {
+Individual** reproduce_parent(Individual* parent, int seq_len, double mut_r, double exp_rep) {
     /*
-     Allocates and writes an array of mutated copies of provided sequence (seq).
-     The number of copies is defined by the n_children parameter; seq_len
-     specifies sequence length. Mutation rate is defined by mut_r
+     Allocates and writes an array of mutated descendants of a parent.
+     seq_len specifies sequence length. Mutation rate is defined by mut_r.
+     exp_rep specifies expected number of replication per individual.
      */
-    char** children = malloc(n_child * sizeof *children);
-    assert(children && "Failed to allocate pointers to children sequences");
-    for (int i = 0; i < n_child; i++) {
-        children[i] = evolve_str(seq, seq_len, mut_r);
+    Individual** children = malloc(parent->replications * sizeof *children);
+    assert(children && "Failed to allocate pointers to children individuals");
+    for (int i = 0; i < parent->replications; i++) {
+        children[i] = init_individual();
+        children[i]->sequence = evolve_str(parent->sequence, seq_len, mut_r);
+        children[i]->replications = get_n_of_replications(exp_rep);
+        children[i]->generation = parent->generation + 1;
     }
     return children;
 }
 
 
+void unload_individual(Individual* individual) {
+    assert(0 && "Not implemented yet");
+}
 
 
-void unload_sequence(char* sequence, int sequence_length);
-
-
-LinkedQueue* process_individual(Individual* individual, int seq_len, double mut_r) {
+LinkedQueue* process_individual(Individual* indiv, int seq_len, double mut_r, double exp_rep) {
     /*
-     Returns a queue of descendant; calls unload_sequence to store the
-     origninal sequence of passed individual. Frees memory allocated by the 
-     passed individual.
+     Returns a queue of mutated descendants; calls unload_individual to unload
+     passed individual from memory to storage and free the memory it occupies.
+     Parameters:
+        Individual* indiv - a pointer to original individual;
+        int seq_len - sequence length;
+        double mut_r - substitution rate;
+        double exp_rep - average expectation of replication events per individual;
      */
-    char* seq = individuals_sequence(individual);
-    short n_children = individuals_rep_left(individual);
-    char** children = reproduce_ancestor(seq, seq_len, n_children, mut_r);
-    LinkedQueue* child_queue = enqueue_pointers((void** )children, n_children);
+    assert(indiv && "Passed NULL instead of individual");
+    Individual** children = reproduce_parent(indiv, seq_len, mut_r, exp_rep);
+    LinkedQueue* child_queue = enqueue_data_pointers((void** )children, indiv->replications);
+    unload_individual(indiv);
     return child_queue;
 }
 
