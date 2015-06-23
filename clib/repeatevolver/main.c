@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     push_data(ancestor_node, main_queue);
     
     // Creating an output file and the original ThreadArgs template
-    FILE* output_file = fopen(output_path, NULL);
+    FILE* output_file = fopen(output_path, "w");
     ThreadArgs* thread_args = init_thread_args();
     thread_args->file_access_mutex_ptr = &file_write_mutex;
     thread_args->queue_access_mutex_ptr = &queue_access_mutex;
