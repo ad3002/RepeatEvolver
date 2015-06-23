@@ -53,6 +53,13 @@ typedef struct ThreadArgs {
 ///////////////////////////
 
 
+/*pthread_t* init_thread() {
+    pthread_t* thread = malloc(sizeof *thread);
+    assert(thread && "Failed to allocate thread");
+    return thread;
+}*/
+
+
 ThreadArgs* init_thread_args() {
     ThreadArgs* thread_args = malloc(sizeof *thread_args);
     assert(thread_args && "Failed to allocate memory for a ThreadArgs instance");
@@ -63,7 +70,8 @@ ThreadArgs* init_thread_args() {
 ThreadArgs* init_indiv_args(ThreadArgs* template_args, Individual* individual) {
     ThreadArgs* thread_args = init_thread_args();
     memcpy(thread_args, template_args, sizeof *thread_args);
-    thread_args->individual = NULL;
+    assert(individual->sequence);
+    thread_args->individual = individual;
     return thread_args;
 }
 
@@ -96,16 +104,14 @@ void* basic_unloader(void* thread_args) {
 
 
 void* start_processor_thread(void* thread_args) {
-    printf("Processort initated\n");
     ThreadArgs* args = (ThreadArgs* )thread_args;
-    printf("Casted args\n");
+    assert(args->individual->sequence);
     Individual** children = reproduce_parent(args->individual,
                                              args->sequence_len,
                                              args->mutation_rate,
                                              args->estimated_replications);
     LinkedQueue* children_queue = enqueue_data_pointers((void** )children,
                                                         args->individual->replications);
-    printf("Locking queue access to push data\n");
     // Locking queue access to push data
     pthread_mutex_lock(args->queue_access_mutex_ptr);
     
@@ -113,11 +119,10 @@ void* start_processor_thread(void* thread_args) {
     
     pthread_mutex_unlock(args->queue_access_mutex_ptr);
     
-    printf("Queue unlocked. Starting new suppliers\n");
     //Queue unlocked. Starting new suppliers
     for (int i = 0; i < args->individual->replications; i++) {
-        pthread_t* supplier;
-        pthread_create(supplier, NULL, start_processor_thread, thread_args);
+        pthread_t supplier;
+        pthread_create(&supplier, NULL, start_processor_thread, thread_args);
     }
     
     pthread_exit(NULL);
@@ -125,40 +130,36 @@ void* start_processor_thread(void* thread_args) {
 
 
 void* start_supplier_thread(void* thread_args) {
-    printf("Supplier initated\n");
     ThreadArgs* args = (ThreadArgs* )thread_args;
-    
     LinkedQueue* queue = args->queue;
     
-    printf("Locking queue access during processor initialization\n");
     // Locking queue access during processor initialization
     pthread_mutex_lock(args->queue_access_mutex_ptr);
     
-    printf("exiting application if enough generations were simulated\n");
     // exiting application if enough generations were simulated
-    if (((Individual* )queue->head->data)->generation >= args->generation_limit) {
+    Individual* individual = pop_data(queue);
+    assert(individual->sequence);
+    
+    if (individual->generation >= args->generation_limit) {
         printf("Successfully passed %d generations\n", args->generation_limit);
         exit(0);
     }
     
-    Individual* individual = pop_data(queue);
-    
-    printf("Unlocking queue\n");
     pthread_mutex_unlock(args->queue_access_mutex_ptr);
     
     // Queue unlocked. Now packing data and starting an individual_processor
     ThreadArgs* indiv_thread_args = init_indiv_args(args, individual);
-    pthread_t* processor;
-    pthread_create(processor, NULL, start_processor_thread, indiv_thread_args);
+    pthread_t processor;
+    pthread_create(&processor, NULL, start_processor_thread, indiv_thread_args);
     
     //Waiting for processor to finish
-    pthread_join(*processor, NULL);
+    pthread_join(processor, NULL);
     
     // Calling unloader. Unloader is supposed to deallocate individual and its
     // underlying data as well as the thread_args passed to it, since unloader
     // is the final consumer of this object.
-    pthread_t* unloader;
-    pthread_create(unloader, NULL, args->unloader_thread, thread_args);
+    pthread_t unloader;
+    pthread_create(&unloader, NULL, args->unloader_thread, indiv_thread_args);
     
     pthread_exit(NULL);
 }

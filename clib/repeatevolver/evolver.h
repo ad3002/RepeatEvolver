@@ -162,6 +162,7 @@ Individual** reproduce_parent(Individual* parent, int seq_len, double mut_r, dou
      seq_len specifies sequence length. Mutation rate is defined by mut_r.
      exp_rep specifies expected number of replication per individual.
      */
+    assert(parent->sequence);
     Individual** children = malloc(parent->replications * sizeof *children);
     assert(children && "Failed to allocate pointers to children individuals");
     for (int i = 0; i < parent->replications; i++) {

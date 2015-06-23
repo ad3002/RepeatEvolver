@@ -172,8 +172,14 @@ void merge_queues(LinkedQueue* head_queue, LinkedQueue* tail_queue) {
      tail_queue
      */
     assert(head_queue && tail_queue && "Passed a NULL queue pointer");
-    head_queue->tail->next = tail_queue->head;
-    head_queue->tail = tail_queue->tail;
+    assert(tail_queue->head && tail_queue->tail && "Passed empty tail_queue");
+    if (head_queue->head && head_queue->tail) {
+        head_queue->tail->next = tail_queue->head;
+        head_queue->tail = tail_queue->tail;
+    } else {
+        head_queue->head = tail_queue->head;
+        head_queue->tail = tail_queue->tail;
+    }
 }
 
 

@@ -12,16 +12,21 @@
 #define MAX_FILE_NAME_LEN 100
 
 
-pthread_mutex_t queue_access_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t file_write_mutex = PTHREAD_MUTEX_INITIALIZER;
-
+typedef struct args {
+    pthread_mutex_t* mutex;
+} args;
 
 
 int main(int argc, char* argv[]) {
-    // Sequence
-    char* seq = malloc(101 * sizeof *seq);
-    seq = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    pthread_mutex_t queue_access_mutex;
+    pthread_mutex_init(&queue_access_mutex, NULL);
+    pthread_mutex_t file_write_mutex;
+    pthread_mutex_init(&file_write_mutex, NULL);
     
+    // Sequence
+    char* template = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    char* ancestor_seq = malloc(101 * sizeof *ancestor_seq);
+    strcpy(ancestor_seq, template);
     
     // Getting parameters
     if (argc < 5) {
@@ -42,9 +47,11 @@ int main(int argc, char* argv[]) {
     
     // Creating a LinkedQueue and the first node
     LinkedQueue* main_queue = init_queue();
-    QueueNode* ancestor_node = init_node();
-    ancestor_node->data = seq;
-    push_data(ancestor_node, main_queue);
+    Individual* ancestor = init_individual();
+    ancestor->sequence = ancestor_seq;
+    ancestor->generation = 0;
+    ancestor->replications = (int)expected_replicates;
+    push_data(ancestor, main_queue);
     
     // Creating an output file and the original ThreadArgs template
     FILE* output_file = fopen(output_path, "w");
@@ -61,9 +68,9 @@ int main(int argc, char* argv[]) {
     thread_args->sequence_len = 100;
     
     // Kicking off the first supplier
-    pthread_t* first_supplier;
-    pthread_create(first_supplier, NULL, start_supplier_thread, thread_args);
-    pthread_join(*first_supplier, NULL);
+    pthread_t first_supplier;
+    pthread_create(&first_supplier, NULL, start_supplier_thread, thread_args);
+    pthread_join(first_supplier, NULL);
     
     // Waiting for the process to finish or to be killed
     printf("Input something to kill the process if you don't want to wait any longer\n");
