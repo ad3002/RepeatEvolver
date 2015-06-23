@@ -125,6 +125,8 @@ void* pop_data(LinkedQueue* queue) {
         update_head_node(queue);
     } else {
         dealloc_node(queue->head);
+        queue->head = NULL;
+        queue->tail = NULL;
     }
     return data;
 }

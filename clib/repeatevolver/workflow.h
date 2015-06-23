@@ -38,12 +38,12 @@ typedef struct ThreadArgs {
     LinkedQueue* queue;
     FILE* output_file;
     pthread_mutex_t* queue_access_mutex_ptr;
-    pthread_mutex_t* file_access_mutes_ptr;
+    pthread_mutex_t* file_access_mutex_ptr;
     double mutation_rate;
     double estimated_replications;
     int sequence_len;
     int generation_limit;
-    void* (*start_unloader)(void* );
+    void* (*unloader_thread)(void* );
     Individual* individual;
 } ThreadArgs;
 
@@ -51,6 +51,21 @@ typedef struct ThreadArgs {
 ///////////////////////////
 //////// Functions ////////
 ///////////////////////////
+
+
+ThreadArgs* init_thread_args() {
+    ThreadArgs* thread_args = malloc(sizeof *thread_args);
+    assert(thread_args && "Failed to allocate memory for a ThreadArgs instance");
+    return thread_args;
+}
+
+
+ThreadArgs* init_indiv_args(ThreadArgs* template_args, Individual* individual) {
+    ThreadArgs* thread_args = init_thread_args();
+    memcpy(thread_args, template_args, sizeof *thread_args);
+    thread_args->individual = NULL;
+    return thread_args;
+}
 
 
 void dealloc_individual_args(ThreadArgs* thread_args) {
@@ -64,19 +79,18 @@ void* basic_unloader(void* thread_args) {
     ThreadArgs* args = (ThreadArgs* )thread_args;
     Individual* individual = args->individual;
     FILE* output_file = args->output_file;
+    
+    // Locking file access
+    pthread_mutex_lock(args->file_access_mutex_ptr);
+    
     fprintf(output_file, "%s\t%d\n", individual->sequence, individual->generation);
+    
+    pthread_mutex_unlock(args->file_access_mutex_ptr);
+    
+    //Lock released. Deallocating arguments struct
     dealloc_individual_args(args);
     
     pthread_exit(NULL);
-}
-
-
-ThreadArgs* init_indiv_args(ThreadArgs* template_args, Individual* individual) {
-    ThreadArgs* thread_args = malloc(sizeof *thread_args);
-    assert(thread_args && "Failed to allocate memory for a ThreadArgs instance");
-    memcpy(thread_args, template_args, sizeof *thread_args);
-    thread_args->individual = NULL;
-    return thread_args;
 }
 
 
@@ -135,7 +149,7 @@ void* start_supplier_thread(void* thread_args) {
     // underlying data as well as the thread_args passed to it, since unloader
     // is the final consumer of this object.
     pthread_t* unloader;
-    pthread_create(unloader, NULL, args->start_unloader, thread_args);
+    pthread_create(unloader, NULL, args->unloader_thread, thread_args);
     
     pthread_exit(NULL);
 }
