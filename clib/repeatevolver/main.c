@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "gsl/gsl_rng.h"
+#include <pthread.h>
 
+#include "gsl/gsl_rng.h"
 #include "queue.h"
 #include "evolver.h"
 #include "workflow.h"

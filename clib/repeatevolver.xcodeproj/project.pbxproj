@@ -1,0 +1,269 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		28C9C97E1B32DAC10055A984 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 28C9C97D1B32DAC10055A984 /* main.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		28C9C9781B32DAC10055A984 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		28774D9C1B35C93500A1A57A /* evolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = evolver.h; path = repeatevolver/evolver.h; sourceTree = "<group>"; };
+		28774DA01B371B0400A1A57A /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = queue.h; path = repeatevolver/queue.h; sourceTree = "<group>"; };
+		28C9C97A1B32DAC10055A984 /* RepeatEvolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RepeatEvolver; sourceTree = BUILT_PRODUCTS_DIR; };
+		28C9C97D1B32DAC10055A984 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		28FB56711B39623C00155BB0 /* workflow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = workflow.h; path = repeatevolver/workflow.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		28C9C9771B32DAC10055A984 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		28C9C9711B32DAC10055A984 = {
+			isa = PBXGroup;
+			children = (
+				28774DA01B371B0400A1A57A /* queue.h */,
+				28774D9C1B35C93500A1A57A /* evolver.h */,
+				28FB56711B39623C00155BB0 /* workflow.h */,
+				28C9C97C1B32DAC10055A984 /* RepeatEvolver */,
+				28C9C97B1B32DAC10055A984 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		28C9C97B1B32DAC10055A984 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				28C9C97A1B32DAC10055A984 /* RepeatEvolver */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		28C9C97C1B32DAC10055A984 /* RepeatEvolver */ = {
+			isa = PBXGroup;
+			children = (
+				28C9C97D1B32DAC10055A984 /* main.c */,
+			);
+			path = RepeatEvolver;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		28C9C9791B32DAC10055A984 /* RepeatEvolver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28C9C9811B32DAC10055A984 /* Build configuration list for PBXNativeTarget "RepeatEvolver" */;
+			buildPhases = (
+				28C9C9761B32DAC10055A984 /* Sources */,
+				28C9C9771B32DAC10055A984 /* Frameworks */,
+				28C9C9781B32DAC10055A984 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepeatEvolver;
+			productName = RepeatEvolver;
+			productReference = 28C9C97A1B32DAC10055A984 /* RepeatEvolver */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		28C9C9721B32DAC10055A984 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = ARRIAM;
+				TargetAttributes = {
+					28C9C9791B32DAC10055A984 = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
+			};
+			buildConfigurationList = 28C9C9751B32DAC10055A984 /* Build configuration list for PBXProject "repeatevolver" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 28C9C9711B32DAC10055A984;
+			productRefGroup = 28C9C97B1B32DAC10055A984 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				28C9C9791B32DAC10055A984 /* RepeatEvolver */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		28C9C9761B32DAC10055A984 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28C9C97E1B32DAC10055A984 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		28C9C97F1B32DAC10055A984 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "/usr/local/lib/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lgsl",
+					"-lgslcblas",
+					"-lpthread",
+				);
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/**";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "/usr/local/include/**";
+			};
+			name = Debug;
+		};
+		28C9C9801B32DAC10055A984 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "/usr/local/lib/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-lgsl",
+					"-lgslcblas",
+					"-lpthread",
+				);
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /usr/local/include/gsl;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "/usr/local/include/**";
+			};
+			name = Release;
+		};
+		28C9C9821B32DAC10055A984 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[arch=*]" = "-I/usr/local/include/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		28C9C9831B32DAC10055A984 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[arch=*]" = "-I/usr/local/include/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		28C9C9751B32DAC10055A984 /* Build configuration list for PBXProject "repeatevolver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C9C97F1B32DAC10055A984 /* Debug */,
+				28C9C9801B32DAC10055A984 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28C9C9811B32DAC10055A984 /* Build configuration list for PBXNativeTarget "RepeatEvolver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C9C9821B32DAC10055A984 /* Debug */,
+				28C9C9831B32DAC10055A984 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 28C9C9721B32DAC10055A984 /* Project object */;
+}
