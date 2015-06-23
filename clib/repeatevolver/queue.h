@@ -1,7 +1,7 @@
 //
-//  llist.h
+//  queue.h
 //  repeatevolver
-//  Created by Ilya Korvigo on 20.06.15.
+//  Created by Ilia Korvigo on 20.06.15.
 //
 
 
@@ -28,7 +28,6 @@ typedef struct QueueNode {
 typedef struct LinkedQueue {
     QueueNode* head;   // pointer to the first Node
     QueueNode* tail;   // pointer to the last Node
-    long long k;       // the number of nodes in the queue
 } LinkedQueue;
 
 
@@ -45,7 +44,6 @@ LinkedQueue* init_queue() {
     assert(queue && "Failed to allocate memory for a queue");
     queue->head = NULL;
     queue->tail = NULL;
-    queue->k = 0;
     
     return queue;
 }
@@ -106,11 +104,9 @@ void push_data(void* data, LinkedQueue* queue) {
     if (!queue->head && !queue->tail) { // If queue is empty
         queue->head = node;
         queue->tail = node;
-        queue->k++;
     } else {
         queue->tail->next = node; // linking new node to the current tail
         queue->tail = node;       // changing tail to the new node
-        queue->k++;
     }
 }
 
@@ -130,7 +126,6 @@ void* pop_data(LinkedQueue* queue) {
     } else {
         dealloc_node(queue->head);
     }
-    
     return data;
 }
 

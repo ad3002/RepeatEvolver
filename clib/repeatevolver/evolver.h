@@ -1,9 +1,9 @@
 //
 //  llist.h
 //  repeatevolver
-//  Created by Ilya Korvigo on 20.06.15.
+//  Created by Ilia Korvigo on 20.06.15.
 //
-
+//  This module covers basic sequence evolution-thru-reproduction process
 
 #ifndef evolver_h
 #define evolver_h
@@ -15,11 +15,14 @@
 #include "gsl/gsl_rng.h"
 
 
-const char substitution_matrix[4][4] = {
-    "TGC",
-    "AGC",
-    "ATC",
-    "ATG"
+const char subst_matrix[4][4] = {
+    /*
+     Substitution matrix used to select replacement bases
+     */
+    "TGC", // substitutions for A
+    "AGC", // substitutions for T
+    "ATC", // substitutions for G
+    "ATG"  // substitutions for C
 };
 
 
@@ -39,10 +42,10 @@ enum substitution_keys {
     /*
      This enum contains "keys" to the substitution_matrix char array
      */
-    A = 0,
-    T = 1,
-    G = 2,
-    C = 3
+    keyA = 0,
+    keyT = 1,
+    keyG = 2,
+    keyC = 3
 };
 
 
@@ -129,16 +132,16 @@ char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
         if (substitute(mutation_rate)) {
             switch (ancestor[i]) {
                 case 'A':
-                    successor[i] = substitution_matrix[A][arc4random_uniform(3)];
+                    successor[i] = subst_matrix[keyA][arc4random_uniform(3)];
                     break;
                 case 'T':
-                    successor[i] = substitution_matrix[T][arc4random_uniform(3)];
+                    successor[i] = subst_matrix[keyT][arc4random_uniform(3)];
                     break;
                 case 'G':
-                    successor[i] = substitution_matrix[G][arc4random_uniform(3)];
+                    successor[i] = subst_matrix[keyG][arc4random_uniform(3)];
                     break;
                 case 'C':
-                    successor[i] = substitution_matrix[C][arc4random_uniform(3)];
+                    successor[i] = subst_matrix[keyC][arc4random_uniform(3)];
                     break;
                 default:
                     assert(0 && "Non-DNA symbol passed");
@@ -169,27 +172,6 @@ Individual** reproduce_parent(Individual* parent, int seq_len, double mut_r, dou
 }
 
 
-void unload_individual(Individual* individual) {
-    assert(0 && "Not implemented yet");
-}
-
-
-LinkedQueue* process_individual(Individual* indiv, int seq_len, double mut_r, double exp_rep) {
-    /*
-     Returns a queue of mutated descendants; calls unload_individual to unload
-     passed individual from memory to storage and free the memory it occupies.
-     Parameters:
-        Individual* indiv - a pointer to original individual;
-        int seq_len - sequence length;
-        double mut_r - substitution rate;
-        double exp_rep - average expectation of replication events per individual;
-     */
-    assert(indiv && "Passed NULL instead of individual");
-    Individual** children = reproduce_parent(indiv, seq_len, mut_r, exp_rep);
-    LinkedQueue* child_queue = enqueue_data_pointers((void** )children, indiv->replications);
-    unload_individual(indiv);
-    return child_queue;
-}
 
 
 #endif
