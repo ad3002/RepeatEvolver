@@ -74,9 +74,11 @@ Individual* init_individual() {
 
 static inline void dealloc_individual(Individual* individual) {
     /*
-     Frees memory allocated by an individual
+     Frees memory allocated by an individual including the undelrying sequence
      */
     assert(individual && "Got NULL instead of an individual pointer");
+    free(individual->sequence);
+    individual->sequence = NULL;
     free(individual);
     individual = NULL;
 }
@@ -170,8 +172,6 @@ Individual** reproduce_parent(Individual* parent, int seq_len, double mut_r, dou
     }
     return children;
 }
-
-
 
 
 #endif

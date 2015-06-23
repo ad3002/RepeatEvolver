@@ -53,6 +53,24 @@ typedef struct ThreadArgs {
 ///////////////////////////
 
 
+void dealloc_individual_args(ThreadArgs* thread_args) {
+    assert(thread_args && "NULL passed instead of ThreadArgs*");
+    dealloc_individual(thread_args->individual);
+    free(thread_args);
+}
+
+
+void* basic_unloader(void* thread_args) {
+    ThreadArgs* args = (ThreadArgs* )thread_args;
+    Individual* individual = args->individual;
+    FILE* output_file = args->output_file;
+    fprintf(output_file, "%s\t%d\n", individual->sequence, individual->generation);
+    dealloc_individual_args(args);
+    
+    pthread_exit(NULL);
+}
+
+
 ThreadArgs* init_indiv_args(ThreadArgs* template_args, Individual* individual) {
     ThreadArgs* thread_args = malloc(sizeof *thread_args);
     assert(thread_args && "Failed to allocate memory for a ThreadArgs instance");
@@ -114,7 +132,8 @@ void* start_supplier_thread(void* thread_args) {
     pthread_join(*processor, NULL);
     
     // Calling unloader. Unloader is supposed to deallocate individual and its
-    // underlying data
+    // underlying data as well as the thread_args passed to it, since unloader
+    // is the final consumer of this object.
     pthread_t* unloader;
     pthread_create(unloader, NULL, args->start_unloader, thread_args);
     
