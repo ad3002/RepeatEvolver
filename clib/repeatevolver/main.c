@@ -28,6 +28,7 @@ int main(int argc, char* argv[]) {
     char* ancestor_seq = malloc(101 * sizeof *ancestor_seq);
     strcpy(ancestor_seq, template);
     
+    
     // Getting parameters
     if (argc < 5) {
         printf("This is supposed to be a help message, but help is for the weak\n");

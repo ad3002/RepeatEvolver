@@ -77,7 +77,7 @@ static inline void dealloc_individual(Individual* individual) {
      Frees memory allocated by an individual including the undelrying sequence
      */
     assert(individual && "Got NULL instead of an individual pointer");
-    free(individual->sequence);
+    /*free(individual->sequence);*/
     individual->sequence = NULL;
     free(individual);
     individual = NULL;

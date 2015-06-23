@@ -53,11 +53,11 @@ typedef struct ThreadArgs {
 ///////////////////////////
 
 
-/*pthread_t* init_thread() {
+pthread_t* init_thread() {
     pthread_t* thread = malloc(sizeof *thread);
     assert(thread && "Failed to allocate thread");
     return thread;
-}*/
+}
 
 
 ThreadArgs* init_thread_args() {
