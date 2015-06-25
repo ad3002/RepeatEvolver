@@ -6,11 +6,6 @@
 #define REPEATEVOLVER_EVOLVER_H
 
 
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
-
-
 ///////////////////////////
 //////// Typedefs  ////////
 ///////////////////////////
