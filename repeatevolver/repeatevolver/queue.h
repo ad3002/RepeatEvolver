@@ -5,6 +5,8 @@
 #ifndef REPEATEVOLVER_QUEUE_H
 #define REPEATEVOLVER_QUEUE_H
 
+#include <pthread.h>
+
 
 ///////////////////////////
 //////// Typedefs  ////////
@@ -19,8 +21,11 @@ typedef struct QueueNode {
 
 
 typedef struct LinkedQueue {
-    QueueNode* head;   // pointer to the first Node
-    QueueNode* tail;   // pointer to the last Node
+    QueueNode*        head;       // pointer to the first Node
+    QueueNode*        tail;       // pointer to the last Node
+    unsigned long     size;
+    pthread_mutex_t   queue_lock;
+    pthread_cond_t    queue_cond;
 } LinkedQueue;
 
 

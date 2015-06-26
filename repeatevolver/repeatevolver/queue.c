@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <pthread.h>
 #include "queue.h"
 
 
@@ -16,7 +17,9 @@ LinkedQueue* init_queue() {
     assert(queue && "Failed to allocate memory for a queue");
     queue->head = NULL;
     queue->tail = NULL;
-    
+    queue->size = 0;
+    pthread_mutex_init(&queue->queue_lock, NULL);
+    pthread_cond_init(&queue->queue_cond, NULL);
     return queue;
 }
 
@@ -53,7 +56,7 @@ void dealloc_node(QueueNode* node) {
 }
 
 
-void update_head_node(LinkedQueue *queue) {
+void cut_head_node(LinkedQueue *queue) {
     /*
      Moves head position to the next node and frees the memory
      allocated by the old head node.
@@ -62,6 +65,7 @@ void update_head_node(LinkedQueue *queue) {
     QueueNode* old_head_pointer = queue->head;
     queue->head = queue->head->next;           // replacing head with a new one
     dealloc_node(old_head_pointer);
+    queue->size--;
 }
 
 
@@ -73,13 +77,14 @@ void push_data(void* data, LinkedQueue* queue) {
     
     QueueNode* node = init_node();
     node->data = data;
-    if (!queue->head && !queue->tail) { // If queue is empty
+    if (!queue->size) { // If queue is empty
         queue->head = node;
         queue->tail = node;
     } else {
         queue->tail->next = node; // linking new node to the current tail
         queue->tail = node;       // changing tail to the new node
     }
+    queue->size++;
 }
 
 
@@ -92,14 +97,16 @@ void* pop_data(LinkedQueue* queue) {
     assert(queue->head && "Can't pop data from an empty queue");
     
     void* data = queue->head->data;            // extract data from head
+    assert(data && "Popped an empty node");
     
     if (queue->head->next) {                   // destroying the old head
-        update_head_node(queue);
+        cut_head_node(queue);
     } else {
         dealloc_node(queue->head);
         queue->head = NULL;
         queue->tail = NULL;
     }
+    queue->size--;
     return data;
 }
 
@@ -117,7 +124,7 @@ void destroy_queue(LinkedQueue* queue) {
         
     } else {
         while (queue->head->next) {
-            update_head_node(queue);
+            cut_head_node(queue);
         }
         dealloc_node(queue->head);
         dealloc_queue(queue);
@@ -152,6 +159,7 @@ void merge_queues(LinkedQueue* head_queue, LinkedQueue* tail_queue) {
         head_queue->head = tail_queue->head;
         head_queue->tail = tail_queue->tail;
     }
+    head_queue->size += tail_queue->size;
 }
 
 
