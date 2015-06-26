@@ -143,6 +143,7 @@ reproduce_parent(Individual* parent, int seq_len, double mut_r, double exp_rep) 
         children[i] = init_individual();
         children[i]->sequence = evolve_str(parent->sequence, seq_len, mut_r);
         children[i]->replications = get_n_of_replications(exp_rep);
+        //printf("Replications %d\n", children[i]->replications);
         children[i]->generation = parent->generation + 1;
     }
     return children;

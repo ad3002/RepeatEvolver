@@ -19,6 +19,7 @@
 int main(int argc, char* argv[]) {
     if (argc < 4) {
         printf("Pass all parameters, i.e. expected replication, mutation rate, output file, generations\n");
+        exit(1);
     }
     double expected_replications = strtod(argv[1], NULL);
     double mutation_rate = strtod(argv[2], NULL);
@@ -45,7 +46,7 @@ int main(int argc, char* argv[]) {
                                  mutation_rate,
                                  output_file_path,
                                  seq_len,
-                                 goal);
+                                 (int)goal);
 
     pthread_t thread;
     pthread_create(&thread, NULL, boss_thread, args);
