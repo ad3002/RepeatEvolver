@@ -18,13 +18,14 @@
 
 int main(int argc, char* argv[]) {
     if (argc < 4) {
-        printf("Pass all parameters, i.e. expected replication, mutation rate, output file, generations\n");
+        printf("Pass all parameters, i.e. expected replication, mutation rate, output file, generations\n, threads available");
         exit(1);
     }
     double expected_replications = strtod(argv[1], NULL);
     double mutation_rate = strtod(argv[2], NULL);
     char* output_file_path = argv[3];
     long goal = strtol(argv[4], NULL, 10);
+    long threads = strtol(argv[5], NULL, 10);
     int seq_len = 10;
     
     LinkedQueue* queue = init_queue();
@@ -36,7 +37,7 @@ int main(int argc, char* argv[]) {
     push_data(ancestor, queue);
 
     ThreadController controller;
-    controller.threads_available = 2;
+    controller.threads_available = (int)threads;
     pthread_mutex_init(&controller.controller_lock, NULL);
     pthread_cond_init(&controller.condition, NULL);
     
