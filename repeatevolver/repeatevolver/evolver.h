@@ -34,6 +34,9 @@ enum substitution_keys {
 ///////////////////////////
 
 
+int randint(int l, int u);
+
+
 Individual* init_individual();
 
 

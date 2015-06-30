@@ -32,6 +32,11 @@ extern unsigned int gsl_ran_bernoulli(const gsl_rng* r, double p);
 extern unsigned int gsl_ran_poisson(const gsl_rng* r, double mu);
 
 
+int randint(int l, int u) {
+    return abs(l + (RAND_MAX*rand() + rand()) % (u-l+1));
+}
+
+
 Individual* init_individual() {
     /*
      Initializes an empty individual
@@ -107,16 +112,16 @@ char* evolve_str(char* ancestor, int ancestor_length, double mutation_rate) {
         if (substitute(mutation_rate)) {
             switch (ancestor[i]) {
                 case 'A':
-                    successor[i] = SUBST_MATRIX[keyA][arc4random_uniform(3)];
+                    successor[i] = SUBST_MATRIX[keyA][randint(0, 2)];
                     break;
                 case 'T':
-                    successor[i] = SUBST_MATRIX[keyT][arc4random_uniform(3)];
+                    successor[i] = SUBST_MATRIX[keyT][randint(0, 2)];
                     break;
                 case 'G':
-                    successor[i] = SUBST_MATRIX[keyG][arc4random_uniform(3)];
+                    successor[i] = SUBST_MATRIX[keyG][randint(0, 2)];
                     break;
                 case 'C':
-                    successor[i] = SUBST_MATRIX[keyC][arc4random_uniform(3)];
+                    successor[i] = SUBST_MATRIX[keyC][randint(0, 2)];
                     break;
                 default:
                     assert(0 && "Non-DNA symbol passed");
