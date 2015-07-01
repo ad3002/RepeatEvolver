@@ -3,7 +3,7 @@ CC=gcc
 CFLAGS=-Wall -I/usr/include -L/usr/local/lib -lgsl -lgslcblas -lm -pthread -lpthread -std=c99
 
 $(target): queue.o evolver.o workflow.o main.o
-	$(CC) $(CFLAGS) queue.o evolver.o main.o workflow.o -o repeatevolver
+	$(CC) queue.o evolver.o main.o workflow.o -o repeatevolver $(CFLAGS)
 
 main.o: main.c
 	$(CC) -c main.c $(CFLAGS)
