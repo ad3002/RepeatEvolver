@@ -6,16 +6,16 @@ $(target): queue.o evolver.o workflow.o main.o
 	$(CC) $(CFLAGS) queue.o evolver.o main.o workflow.o -o repeatevolver
 
 main.o: main.c
-	$(CC) $(CFLAGS) -c main.c
+	$(CC) -c main.c $(CFLAGS)
 
 queue.o: queue.c
-	$(CC) $(CFLAGS) -c queue.c
+	$(CC) -c queue.c $(CFLAGS)
 
 evolver.o: evolver.c
-	$(CC) $(CFLAGS) -c evolver.c
+	$(CC) -c evolver.c $(CFLAGS)
 
 workflow.o: workflow.c
-	$(CC) $(CFLAGS) -c workflow.c
+	$(CC) -c workflow.c $(CFLAGS)
 
 clean:
 	rm -rf *.o
