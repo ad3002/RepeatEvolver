@@ -1,6 +1,6 @@
 target=repeatevolver
 CC=gcc
-CFLAGS=-Wall -L/usr/local/lib -lgsl -lgslcblas -lm -pthread -lpthread -std=c99
+CFLAGS=-Wall -I/usr/include -L/usr/local/lib -lgsl -lgslcblas -lm -pthread -lpthread -std=c99
 
 $(target): queue.o evolver.o workflow.o main.o
 	$(CC) $(CFLAGS) queue.o evolver.o main.o workflow.o -o repeatevolver
