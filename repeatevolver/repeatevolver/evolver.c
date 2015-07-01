@@ -27,6 +27,7 @@ const char SUBST_MATRIX[4][4] = {
 ///////////////////////////
 
 
+
 extern unsigned int gsl_ran_bernoulli(const gsl_rng* r, double p);
 
 extern unsigned int gsl_ran_poisson(const gsl_rng* r, double mu);
